@@ -1,4 +1,4 @@
-using UnityEngine;
+ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -7,6 +7,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float forwardSpeed;
     [SerializeField] private float laneDistance = 2.5f;
     [SerializeField] private float swipeSpeed = 8f;
+    
+    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float gravity = -20f;
     
     private Vector3 _direction;
     private int _currentLane = 1; // 0 = left, 1 = middle, 2 = right
@@ -18,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     {
         GetLaneInput();
         Move();
+        Jump();
     }
     
     private void Move()
@@ -46,8 +50,24 @@ public class PlayerMovement : MonoBehaviour
             _sideMovement = -swipeSpeed;
         }
         
-        _direction = new Vector3(_sideMovement, 0, forwardSpeed);
+        _direction.x = _sideMovement;
+        _direction.z = forwardSpeed;
         controller.Move(_direction * Time.deltaTime);
+    }
+
+    private void Jump()
+    {
+        if (controller.isGrounded && _direction.y < 0)
+        {
+            _direction.y = -2f;
+        }
+        
+        if (controller.isGrounded && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)))
+        {
+            _direction.y = jumpForce;
+        }
+        
+        _direction.y += gravity * Time.deltaTime;
     }
     
     private void GetLaneInput()
