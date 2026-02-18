@@ -12,7 +12,7 @@ public class TileManager : MonoBehaviour
     
     private List<GameObject> activeTiles = new List<GameObject>();
     
-    private void Start()
+    private void Awake()
     {
         for (int i = 0; i < numberOfTiles; i++)
         {
@@ -29,7 +29,7 @@ public class TileManager : MonoBehaviour
 
     private void Update()
     {
-        if(playerTransform.position.z - 50 > zDistanceToSpawn - (numberOfTiles * tileLength))
+        if(playerTransform.position.z - tileLength > zDistanceToSpawn - (numberOfTiles * tileLength))
         {
             SpawnTile(Random.Range(0, tilePrefab.Length));
             DeleteTile();
